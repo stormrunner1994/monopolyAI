@@ -68,7 +68,7 @@
             // 
             // buttonAutoRun
             // 
-            this.buttonAutoRun.Location = new System.Drawing.Point(221, 293);
+            this.buttonAutoRun.Location = new System.Drawing.Point(157, 295);
             this.buttonAutoRun.Name = "buttonAutoRun";
             this.buttonAutoRun.Size = new System.Drawing.Size(121, 23);
             this.buttonAutoRun.TabIndex = 3;

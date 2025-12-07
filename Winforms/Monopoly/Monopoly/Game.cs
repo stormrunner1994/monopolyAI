@@ -17,14 +17,18 @@ namespace Monopoly
         public List<StepHistoryEntry> History { get; private set; } = new List<StepHistoryEntry>();
         private StepHistoryEntry CurrentStepHistoryEntry { get; set; }
 
-        public static Game TryCreateGame()
+        public Game(Setting setting)
         {
-                GameBoard gameBoard = GameBoard.TryCreateGameBoard();
-                Setting setting = new Setting();
-                Game game = new Game();
-                game.GameBoard = gameBoard;
-                game.Restart();
-                return game;
+            Setting = setting;
+            GameBoard = GameBoard.TryCreateGameBoard();
+            Restart();
+        }
+
+        public Game()
+        {
+            Setting = new Setting();
+            GameBoard = GameBoard.TryCreateGameBoard();
+            Restart();
         }
 
         public List<string[]> GetPlayersData()
@@ -40,7 +44,9 @@ namespace Monopoly
         {
             CurrentPlayer = new Player(Random, "Player1", GameBoard.Cells.First());
             Players.Add(CurrentPlayer);
-            Players.Add(new Player(Random, "Player2", GameBoard.Cells.First()));
+
+            for (int a = 1; a < Setting.NumberPlayers; a++)
+                Players.Add(new Player(Random, "Player" + (a + 1), GameBoard.Cells.First()));
             Status = Stati.Running;
             return true;
         }
@@ -51,7 +57,7 @@ namespace Monopoly
             MovePlayer();
             CheckAction();
 
-            if (Players.Where(i => i.Money > 0).Count() <= 1)
+            if (Players.Any(i => i.Money < 0))
             {
                 CurrentStepHistoryEntry.AddEntry("Game finished");
                 Status = Stati.Finished;
@@ -80,7 +86,10 @@ namespace Monopoly
             }
             // can buy available street
             else if (CurrentPlayer.CurrentCell.StreetCard != null &&
-                CurrentPlayer.CurrentCell.StreetCard.BuyPrice <= CurrentPlayer.Money)
+                CurrentPlayer.CurrentCell.StreetCard.BuyPrice <= CurrentPlayer.Money
+                // is streetcard still available?
+                && GameBoard.AvailableStreetCars.FirstOrDefault(i=>i.Name ==
+                CurrentPlayer.CurrentCell.StreetCard.Name)!= null)
             {
                 GameBoard.AvailableStreetCars.Remove(CurrentPlayer.CurrentCell.StreetCard);
                 CurrentPlayer.BuyStreetCard(CurrentPlayer.CurrentCell.StreetCard);

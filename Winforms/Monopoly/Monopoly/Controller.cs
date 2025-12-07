@@ -11,12 +11,12 @@ namespace Monopoly
         public Stati Status { get; private set; } = Stati.IsStandby;
         private bool HasToStop { get; set; } = false;
 
-        public Controller()
+        public Controller(Setting setting)
         {
             Game game = null;
             try
             {
-                game = Game.TryCreateGame();
+                game = new Game(setting);
             }
             catch (Exception ex)
             {
