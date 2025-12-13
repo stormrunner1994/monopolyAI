@@ -22,7 +22,7 @@ namespace Monopoly
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _controller = new Controller(new Setting(4));
+            _controller = new Controller(new Setting(2));
         }
 
         public DataGridView GetDataGridView()
