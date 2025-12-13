@@ -12,8 +12,10 @@ namespace Monopoly
 		private const string Money = "Money";
 		private const string Position = "Position";
 		private const string NumberStreets = "NumberStreets";
+		public Button ButtonAutoRun => buttonAutoRun;
 
-		public Form1()
+
+        public Form1()
 		{
 			InitializeComponent();
 
@@ -26,12 +28,10 @@ namespace Monopoly
 			Viewer.Init(this);
 		}
 
-		public Button ButtonAutoRun => buttonAutoRun;
-
-		private void Form1_Load(object sender, EventArgs e)
-		{
-			_controller = new Controller(new Setting { NumberPlayers = 4 });
-		}
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            _controller = new Controller(new Setting() { NumberPlayers = 2});
+        }
 
 		public DataGridView GetDataGridView()
 		{
