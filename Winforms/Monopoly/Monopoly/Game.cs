@@ -7,14 +7,15 @@ namespace Monopoly
 {
 	public class Game
 	{
+		public static int MaxMoney => 500 * 70;
 		public string Error { get; private set; } = "";
 		public enum Stati { Standby, Running, Finished }
 		public Stati Status { get; set; } = Stati.Standby;
-		public List<Player> Players { get; private set; } = new List<Player>();
+		public List<Player> Players { get; private set; } = new();
 		public Player CurrentPlayer { get; private set; }
 		public GameBoard GameBoard { get; private set; }
 		public Setting Setting { get; private set; }
-		public List<IHistoryEntry> History { get; private set; } = new();
+		public List<IHistoryEntry> History { get; private set; } = new ();
 
 		public Game(Setting setting)
 		{
@@ -46,6 +47,12 @@ namespace Monopoly
 				Status = Stati.Finished;
 				return true;
 			}
+			else if (Players.Any(i => i.Money >= MaxMoney))
+			{
+				History.Add(new GameEndHistoryEntry(Players.MaxBy(p => p.Money).Name));
+				Status = Stati.Finished;
+				return true;
+			}
 
 			SelectNextPlayer();
 			return true;
@@ -61,6 +68,7 @@ namespace Monopoly
 				=> i.StreetCards.Any(c => c.Name == CurrentPlayer.CurrentCell.StreetCard.Name)
 				&& i.Name != CurrentPlayer.Name
 			);
+
 			if (playerToPayTo != null)
 			{
 				StreetCard streetCard = playerToPayTo.StreetCards.First(i => i.Name == CurrentPlayer.CurrentCell.StreetCard.Name);
